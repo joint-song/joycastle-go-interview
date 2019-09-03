@@ -22,12 +22,14 @@ func NewManager(ctx context.Context) *Manager {
 		b:      uint64(time.Now().Unix()),
 	}
 	go func() {
+	out:
 		for {
 			m.b++
 			select {
 			case <-ctx.Done():
 				return
 			case m.idChan <- pseudoEncrypt(m.b):
+				continue out
 			}
 		}
 	}()
